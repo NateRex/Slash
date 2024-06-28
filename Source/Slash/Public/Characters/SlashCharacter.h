@@ -40,7 +40,7 @@ protected:
 	UInputAction* MoveAction;
 
 	virtual void BeginPlay() override;
-	virtual void Jump();
+	virtual void Jump() override;
 	void Look(const FInputActionValue& Value);
 	void Move(const FInputActionValue& Value);
 
