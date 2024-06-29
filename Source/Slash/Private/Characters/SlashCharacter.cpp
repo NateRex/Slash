@@ -115,6 +115,8 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
+	if (ActionState == EActionState::EAS_Attacking) return;
+	
 	const FVector2d MovementInput = Value.Get<FVector2d>();
 
 	const FRotator Rotation = GetControlRotation();

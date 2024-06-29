@@ -8,6 +8,12 @@
 
 class USphereComponent;
 
+enum class EItemState : uint8
+{
+	EIS_Hovering,
+	EIS_Equipped
+};
+
 UCLASS()
 class SLASH_API AItem : public AActor
 {
@@ -47,6 +53,7 @@ protected:
 
 	virtual void BeginPlay() override;
 	
+	EItemState ItemState = EItemState::EIS_Hovering;
 
 private:
 
