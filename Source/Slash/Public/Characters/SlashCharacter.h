@@ -48,12 +48,25 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* MoveAction;
 
+	/**
+	* Input callbacks
+	*/
+
 	virtual void BeginPlay() override;
 	virtual void Jump() override;
 	void Equip();
 	void Attack();
 	void Look(const FInputActionValue& Value);
 	void Move(const FInputActionValue& Value);
+
+	/**
+	* Play montage functions
+	*/
+
+	void PlayAttackMontage();
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+	bool CanAttack() const;
 
 private:
 
@@ -72,8 +85,10 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
-	UPROPERTY(VisibleInstanceOnly)
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 
 	/**
 	* Animation montages
