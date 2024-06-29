@@ -2,7 +2,8 @@
 
 
 #include "Items/Item.h"
-#include "Slash/DebugMacros.h"
+#include "Components/SphereComponent.h"
+#include "Characters/SlashCharacter.h"
 
 AItem::AItem()
 {
@@ -10,11 +11,35 @@ AItem::AItem()
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 	SetRootComponent(ItemMesh);
+
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("ItemSphere"));
+	Sphere->SetupAttachment(ItemMesh);
 }
 
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereStartOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
+}
+
+void AItem::OnSphereStartOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor);
+	if (SlashCharacter)
+	{
+		SlashCharacter->SetOverlappingItem(this);
+	}
+}
+
+void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor);
+	if (SlashCharacter && SlashCharacter->GetOverlappingItem() == this)
+	{
+		SlashCharacter->SetOverlappingItem(nullptr);
+	}
 }
 
 float AItem::TransformedSin() const
