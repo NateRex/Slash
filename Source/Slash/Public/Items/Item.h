@@ -21,6 +21,9 @@ public:
 
 protected:
 
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* ItemMesh;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float Amplitude = 0.25f;
 
@@ -52,9 +55,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float RunningTime;
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ItemMesh;
 
 };
 

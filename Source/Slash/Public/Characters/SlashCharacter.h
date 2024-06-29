@@ -14,6 +14,7 @@ class UGroomComponent;
 class UInputMappingContext;
 class UInputAction;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class SLASH_API ASlashCharacter : public ACharacter
@@ -36,6 +37,9 @@ protected:
 	UInputAction* JumpAction;
 
 	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* AttackAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* EquipAction;
 
 	UPROPERTY(EditAnywhere, Category = Input)
@@ -47,6 +51,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Jump() override;
 	void Equip();
+	void Attack();
 	void Look(const FInputActionValue& Value);
 	void Move(const FInputActionValue& Value);
 
@@ -67,7 +72,15 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
+	UPROPERTY(VisibleInstanceOnly)
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
+	/**
+	* Animation montages
+	*/
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* AttackMontage;
 
 public:
 
