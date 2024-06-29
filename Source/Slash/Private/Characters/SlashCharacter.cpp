@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Items/Item.h"
+#include "Items/Weapons/Weapon.h"
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -47,6 +49,16 @@ void ASlashCharacter::BeginPlay()
 void ASlashCharacter::Jump()
 {
 	Super::Jump();
+}
+
+void ASlashCharacter::Equip()
+{
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	}
 }
 
 void ASlashCharacter::Look(const FInputActionValue& Value)
@@ -97,6 +109,9 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
+
+		// Equipping an Item
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Equip);
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);

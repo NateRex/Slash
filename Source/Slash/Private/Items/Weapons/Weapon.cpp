@@ -1,0 +1,10 @@
+// Copyright (c) 2024 Nathaniel Rex. No Rights Reserved.
+
+
+#include "Items/Weapons/Weapon.h"
+
+void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
+{
+	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, false);
+	AttachToComponent(InParent, TransformRules, InSocketName);
+}

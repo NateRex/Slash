@@ -74,5 +74,6 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
-# Ignore Content folder since we aren't using Git-LFS
+# Ignore Asset and Content folders since we aren't using Git-LFS
+Assets/
 Content/

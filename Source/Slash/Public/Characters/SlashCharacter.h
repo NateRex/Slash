@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "CharacterTypes.h"
 #include "SlashCharacter.generated.h"
 
 class USpringArmComponent;
@@ -35,6 +36,9 @@ protected:
 	UInputAction* JumpAction;
 
 	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* EquipAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* LookAction;
 
 	UPROPERTY(EditAnywhere, Category = Input)
@@ -42,6 +46,7 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Jump() override;
+	void Equip();
 	void Look(const FInputActionValue& Value);
 	void Move(const FInputActionValue& Value);
 
@@ -62,10 +67,13 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
+	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
 public:
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; }
+
+	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
 };
