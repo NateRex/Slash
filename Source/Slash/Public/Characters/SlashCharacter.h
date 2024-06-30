@@ -14,6 +14,7 @@ class UGroomComponent;
 class UInputMappingContext;
 class UInputAction;
 class AItem;
+class AWeapon;
 class UAnimMontage;
 
 UCLASS()
@@ -24,7 +25,9 @@ class SLASH_API ASlashCharacter : public ACharacter
 public:
 	
 	ASlashCharacter();
+
 	virtual void Tick(float DeltaTime) override;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
@@ -53,10 +56,15 @@ protected:
 	*/
 
 	virtual void BeginPlay() override;
+
 	virtual void Jump() override;
+
 	void Equip();
+
 	void Attack();
+
 	void Look(const FInputActionValue& Value);
+
 	void Move(const FInputActionValue& Value);
 
 	/**
@@ -64,9 +72,26 @@ protected:
 	*/
 
 	void PlayAttackMontage();
+
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
+
 	bool CanAttack() const;
+
+	void PlayEquipMontage(FName SectionName);
+
+	bool CanDisarm() const;
+
+	bool CanArm() const;
+
+	UFUNCTION(BlueprintCallable)
+	void Arm();
+
+	UFUNCTION(BlueprintCallable)
+	void Disarm();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
 
 private:
 
@@ -85,6 +110,9 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
+	UPROPERTY(VisibleInstanceOnly, Category = Weapon)
+	AWeapon* EquippedWeapon;
+
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -96,6 +124,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* EquipMontage;
 
 public:
 

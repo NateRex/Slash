@@ -59,7 +59,56 @@ void ASlashCharacter::Equip()
 	{
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		EquippedWeapon = OverlappingWeapon;
+		OverlappingItem = nullptr;
 	}
+	else if (CanDisarm())
+	{
+		PlayEquipMontage(FName("Unequip"));
+		CharacterState = ECharacterState::ECS_Unequipped;
+		ActionState = EActionState::EAS_EquippingWeapon;
+	}
+	else if (CanArm())
+	{
+		PlayEquipMontage(FName("Equip"));
+		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		ActionState = EActionState::EAS_EquippingWeapon;
+	}
+}
+
+bool ASlashCharacter::CanDisarm() const
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState != ECharacterState::ECS_Unequipped &&
+		EquippedWeapon;
+}
+
+bool ASlashCharacter::CanArm() const
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState == ECharacterState::ECS_Unequipped &&
+		EquippedWeapon;
+}
+
+void ASlashCharacter::Arm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	}
+}
+
+void ASlashCharacter::Disarm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
+	}
+}
+
+void ASlashCharacter::FinishEquipping()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }
 
 void ASlashCharacter::Attack()
@@ -75,6 +124,16 @@ bool ASlashCharacter::CanAttack() const
 {
 	return ActionState == EActionState::EAS_Unoccupied &&
 		CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+void ASlashCharacter::PlayEquipMontage(FName SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(SectionName);
+	}
 }
 
 void ASlashCharacter::PlayAttackMontage()
@@ -115,7 +174,7 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
-	if (ActionState == EActionState::EAS_Attacking) return;
+	if (ActionState != EActionState::EAS_Unoccupied) return;
 	
 	const FVector2d MovementInput = Value.Get<FVector2d>();
 
