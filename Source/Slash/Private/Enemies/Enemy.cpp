@@ -4,6 +4,7 @@
 #include "Enemies/Enemy.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Slash/DebugMacros.h"
 
 AEnemy::AEnemy()
 {
@@ -34,5 +35,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemy::GetHit(const FVector& ImpactLocation)
+{
+	DRAW_SPHERE_COLOR(ImpactLocation, FColor::Orange);
 }
 

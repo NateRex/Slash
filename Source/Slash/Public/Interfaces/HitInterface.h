@@ -18,5 +18,5 @@ class SLASH_API IHitInterface
 
 public:
 
-	virtual void GetHit() = 0;
+	virtual void GetHit(const FVector& ImpactPoint) = 0;
 };
