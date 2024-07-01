@@ -135,13 +135,13 @@ bool ASlashCharacter::CanAttack() const
 		CharacterState != ECharacterState::ECS_Unequipped;
 }
 
-void ASlashCharacter::PlayEquipMontage(FName SectionName)
+void ASlashCharacter::PlayEquipMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && EquipMontage)
 	{
 		AnimInstance->Montage_Play(EquipMontage);
-		AnimInstance->Montage_JumpToSection(SectionName);
+		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
 	}
 }
 
@@ -180,7 +180,6 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 {
 	const FVector2d LookInput = Value.Get<FVector2d>();
 	AddControllerYawInput(LookInput.X);
-	UE_LOG(LogTemp, Warning, TEXT("Y: %f"), LookInput.Y);
 	AddControllerPitchInput(LookInput.Y);
 }
 

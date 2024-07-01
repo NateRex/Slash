@@ -4,7 +4,7 @@
 #include "Enemies/Enemy.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Slash/DebugMacros.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AEnemy::AEnemy()
 {
@@ -25,6 +25,16 @@ void AEnemy::BeginPlay()
 	
 }
 
+void AEnemy::PlayHitReactMontage(const FName& SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && HitReactMontage)
+	{
+		AnimInstance->Montage_Play(HitReactMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+	}
+}
+
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -37,8 +47,22 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AEnemy::GetHit(const FVector& ImpactLocation)
+void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	DRAW_SPHERE_COLOR(ImpactLocation, FColor::Orange);
+	PlayHitReactMontage(FName("FromLeft"));
+
+	const FVector Forward = GetActorForwardVector();
+	const FVector ActorLocation = GetActorLocation();
+	const FVector ImpactAdjusted(ImpactPoint.X, ImpactPoint.Y, ActorLocation.Z);
+	const FVector ToHit = (ImpactAdjusted - GetActorLocation()).GetSafeNormal();
+	const double Dot = FVector::DotProduct(Forward, ToHit);
+	const double Angle = FMath::RadiansToDegrees(FMath::Acos(Dot));
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta: %f"), Angle));
+	}
+	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + Forward * 60.f, 5.f, FColor::Red, 5.f);
+	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + ToHit * 60.f, 5.f, FColor::Green, 5.f);
 }
 
