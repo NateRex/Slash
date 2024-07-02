@@ -59,6 +59,14 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 			HitSound,
 			ImpactPoint);
 	}
+
+	if (HitParticles)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitParticles,
+			ImpactPoint);
+	}
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
