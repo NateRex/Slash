@@ -49,8 +49,6 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	PlayHitReactMontage(FName("FromLeft"));
-
 	const FVector Forward = GetActorForwardVector();
 	const FVector ActorLocation = GetActorLocation();
 	const FVector ImpactAdjusted(ImpactPoint.X, ImpactPoint.Y, ActorLocation.Z);
@@ -64,12 +62,19 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 		Angle *= -1.f;
 	}
 
-	if (GEngine)
+	FName Section("FromBack");
+	if (Angle >= -45.f && Angle < 45.f)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta: %f"), Angle));
+		Section = FName("FromFront");
 	}
-	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + Forward * 60.f, 5.f, FColor::Red, 5.f);
-	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + ToHit * 60.f, 5.f, FColor::Green, 5.f);
-	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + CrossProduct * 60.f, 5.f, FColor::Blue, 5.f);
+	else if (Angle >= -135.f && Angle < -45.f)
+	{
+		Section = FName("FromLeft");
+	}
+	else if (Angle >= 45.f && Angle < 135.f)
+	{
+		Section = FName("FromRight");
+	}
+	PlayHitReactMontage(Section);
 }
 
