@@ -37,6 +37,9 @@ protected:
 
 private:
 
+	UPROPERTY(EditAnywhere, Category = Sounds)
+	USoundBase* HitSound;
+
 	/**
 	* Animation montages
 	*/
