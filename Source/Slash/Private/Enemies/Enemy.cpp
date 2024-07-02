@@ -49,6 +49,11 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
+	DirectionalHitReact(ImpactPoint);
+}
+
+void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
+{
 	const FVector Forward = GetActorForwardVector();
 	const FVector ActorLocation = GetActorLocation();
 	const FVector ImpactAdjusted(ImpactPoint.X, ImpactPoint.Y, ActorLocation.Z);

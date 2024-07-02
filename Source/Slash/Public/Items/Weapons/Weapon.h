@@ -17,6 +17,8 @@ class SLASH_API AWeapon : public AItem
 
 public:
 
+	TArray<AActor*> IgnoreActors;
+
 	AWeapon();
 
 	void Equip(USceneComponent* InParent, FName InSocketName);
