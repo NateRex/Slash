@@ -56,7 +56,13 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	const FVector ImpactAdjusted(ImpactPoint.X, ImpactPoint.Y, ActorLocation.Z);
 	const FVector ToHit = (ImpactAdjusted - GetActorLocation()).GetSafeNormal();
 	const double Dot = FVector::DotProduct(Forward, ToHit);
-	const double Angle = FMath::RadiansToDegrees(FMath::Acos(Dot));
+	double Angle = FMath::RadiansToDegrees(FMath::Acos(Dot));
+
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+	if (CrossProduct.Z < 0)
+	{
+		Angle *= -1.f;
+	}
 
 	if (GEngine)
 	{
@@ -64,5 +70,6 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	}
 	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + Forward * 60.f, 5.f, FColor::Red, 5.f);
 	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + ToHit * 60.f, 5.f, FColor::Green, 5.f);
+	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + CrossProduct * 60.f, 5.f, FColor::Blue, 5.f);
 }
 
