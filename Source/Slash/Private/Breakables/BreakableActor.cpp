@@ -26,11 +26,8 @@ void ABreakableActor::Tick(float DeltaTime)
 
 }
 
-void ABreakableActor::GetHit(const FVector& ImpactPoint)
+void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, FString("Breakable was hit"));
-	}
+	
 }
 
