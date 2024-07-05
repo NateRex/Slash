@@ -7,7 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/AttributeComponent.h"
-#include "Components/WidgetComponent.h"
+#include "HUD/HealthBarComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -23,8 +23,8 @@ AEnemy::AEnemy()
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 
-	HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
-	HealthBarWidget->SetupAttachment(GetRootComponent());
+	HealthBar = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void AEnemy::BeginPlay()
@@ -73,6 +73,11 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 			GetWorld(),
 			HitParticles,
 			ImpactPoint);
+	}
+
+	if (HealthBar)
+	{
+		HealthBar->SetHealthPercent(.5f);
 	}
 }
 
