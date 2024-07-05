@@ -6,6 +6,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Components/AttributeComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -18,6 +19,8 @@ AEnemy::AEnemy()
 	SkeletalMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 	SkeletalMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	SkeletalMesh->SetGenerateOverlapEvents(true);
+
+	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 }
 
 void AEnemy::BeginPlay()
