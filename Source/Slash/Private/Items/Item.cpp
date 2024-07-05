@@ -4,6 +4,7 @@
 #include "Items/Item.h"
 #include "Components/SphereComponent.h"
 #include "Characters/SlashCharacter.h"
+#include "NiagaraComponent.h"
 
 AItem::AItem()
 {
@@ -14,6 +15,9 @@ AItem::AItem()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("ItemSphere"));
 	Sphere->SetupAttachment(ItemMesh);
+
+	EmbersEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ItemEmbers"));
+	EmbersEffect->SetupAttachment(ItemMesh);
 }
 
 void AItem::BeginPlay()
