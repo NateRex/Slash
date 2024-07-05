@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/AttributeComponent.h"
+#include "Components/WidgetComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -21,6 +22,9 @@ AEnemy::AEnemy()
 	SkeletalMesh->SetGenerateOverlapEvents(true);
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+
+	HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
 void AEnemy::BeginPlay()
