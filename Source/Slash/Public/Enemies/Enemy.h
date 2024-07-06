@@ -59,6 +59,11 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBar;
 
+	UPROPERTY(EditAnywhere)
+	double CombatRange = 1000.f;
+
+	APawn* CombatTarget = nullptr;
+
 	/**
 	* Animation montages
 	*/
