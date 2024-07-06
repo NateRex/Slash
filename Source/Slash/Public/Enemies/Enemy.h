@@ -39,6 +39,8 @@ protected:
 
 	void PlayHitReactMontage(const FName& SectionName);
 
+	void Die();
+
 private:
 
 	UPROPERTY(EditAnywhere, Category = Sounds)
@@ -59,4 +61,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* DeathMontage;
 };
