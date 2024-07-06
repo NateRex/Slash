@@ -74,11 +74,6 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 			HitParticles,
 			ImpactPoint);
 	}
-
-	if (HealthBar)
-	{
-		HealthBar->SetHealthPercent(.5f);
-	}
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
@@ -110,5 +105,20 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 		Section = FName("FromRight");
 	}
 	PlayHitReactMontage(Section);
+}
+
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (Attributes)
+	{
+		Attributes->ReceiveDamage(DamageAmount);
+
+		if (HealthBar)
+		{
+			HealthBar->SetHealthPercent(Attributes->GetHealthPercent());
+		}
+	}
+
+	return DamageAmount;
 }
 
