@@ -38,6 +38,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	bool InTargetRange(AActor* Target, double Radius);
+
 	/**
 	* Play montage functions
 	*/
@@ -62,6 +64,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	double CombatRange = 1000.f;
+
+	UPROPERTY(EditAnywhere)
+	double PatrolRange = 200.f;
 
 	APawn* CombatTarget = nullptr;
 
