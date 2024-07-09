@@ -81,6 +81,9 @@ private:
 	double CombatRange = 1000.f;
 
 	UPROPERTY(EditAnywhere)
+	double AttackRange = 150.f;
+
+	UPROPERTY(EditAnywhere)
 	double PatrolRange = 200.f;
 
 	APawn* CombatTarget = nullptr;
