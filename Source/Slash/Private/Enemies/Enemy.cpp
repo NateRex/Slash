@@ -201,11 +201,15 @@ void AEnemy::CheckCombatTarget()
 {
 	if (!InTargetRange(CombatTarget, CombatRange))
 	{
+		// Outside combat radius, lose interest
 		CombatTarget = nullptr;
 		if (HealthBar)
 		{
 			HealthBar->SetVisibility(false);
 		}
+		EnemyState = EEnemyState::EES_Patrolling;
+		GetCharacterMovement()->MaxWalkSpeed = 125.f;
+		MoveToTarget(PatrolTarget);
 	}
 }
 
