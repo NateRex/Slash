@@ -27,8 +27,6 @@ AEnemy::AEnemy()
 	SkeletalMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	SkeletalMesh->SetGenerateOverlapEvents(true);
 
-	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
-
 	HealthBar = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBar->SetupAttachment(GetRootComponent());
 
@@ -163,16 +161,6 @@ void AEnemy::PatrolTimerFinished()
 	MoveToTarget(PatrolTarget);
 }
 
-void AEnemy::PlayHitReactMontage(const FName& SectionName)
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && HitReactMontage)
-	{
-		AnimInstance->Montage_Play(HitReactMontage);
-		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
-	}
-}
-
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -265,37 +253,6 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 			HitParticles,
 			ImpactPoint);
 	}
-}
-
-void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
-{
-	const FVector Forward = GetActorForwardVector();
-	const FVector ActorLocation = GetActorLocation();
-	const FVector ImpactAdjusted(ImpactPoint.X, ImpactPoint.Y, ActorLocation.Z);
-	const FVector ToHit = (ImpactAdjusted - GetActorLocation()).GetSafeNormal();
-	const double Dot = FVector::DotProduct(Forward, ToHit);
-	double Angle = FMath::RadiansToDegrees(FMath::Acos(Dot));
-
-	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
-	if (CrossProduct.Z < 0)
-	{
-		Angle *= -1.f;
-	}
-
-	FName Section("FromBack");
-	if (Angle >= -45.f && Angle < 45.f)
-	{
-		Section = FName("FromFront");
-	}
-	else if (Angle >= -135.f && Angle < -45.f)
-	{
-		Section = FName("FromLeft");
-	}
-	else if (Angle >= 45.f && Angle < 135.f)
-	{
-		Section = FName("FromRight");
-	}
-	PlayHitReactMontage(Section);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
