@@ -7,6 +7,7 @@
 #include "Characters/CharacterTypes.h"
 #include "Enemy.generated.h"
 
+class AWeapon;
 class UHealthBarComponent;
 class AAIController;
 class UPawnSensingComponent;
@@ -31,6 +32,8 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	virtual void Destroyed() override;
+
 protected:
 	
 	UPROPERTY(BlueprintReadOnly)
@@ -50,6 +53,9 @@ protected:
 	virtual void Die() override;
 
 private:
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> WeaponClass;
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBar;
