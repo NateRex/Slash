@@ -52,6 +52,10 @@ protected:
 
 	virtual void Die() override;
 
+	virtual void Attack() override;
+
+	virtual void PlayAttackMontage() override;
+
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -64,7 +68,7 @@ private:
 	UPawnSensingComponent* PawnSensing;
 
 	UPROPERTY(EditAnywhere)
-	double CombatRange = 1000.f;
+	double CombatRange = 500.f;
 
 	UPROPERTY(EditAnywhere)
 	double AttackRange = 150.f;
