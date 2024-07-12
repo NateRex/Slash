@@ -30,12 +30,6 @@ protected:
 	UPROPERTY(VisibleInstanceOnly, Category = Weapon)
 	AWeapon* EquippedWeapon;
 
-	UPROPERTY(EditAnywhere, Category = Sounds)
-	USoundBase* HitSound;
-
-	UPROPERTY(EditAnywhere, Category = "Visual Effects")
-	UParticleSystem* HitParticles;
-
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* AttackMontage;
 
@@ -61,4 +55,20 @@ protected:
 	void PlayHitReactMontage(const FName& SectionName);
 
 	virtual void Die();
+
+	bool IsAlive() const;
+
+	void PlayHitSound(const FVector& ImpactPoint);
+
+	void SpawnHitParticles(const FVector& ImpactPoint);
+
+	virtual void HandleDamage(float DamageAmount);
+
+private:
+
+	UPROPERTY(EditAnywhere, Category = Sounds)
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Visual Effects")
+	UParticleSystem* HitParticles;
 };

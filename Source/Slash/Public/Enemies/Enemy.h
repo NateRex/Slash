@@ -19,42 +19,39 @@ class SLASH_API AEnemy : public ABaseCharacter
 
 public:
 	AEnemy();
-
 	virtual void Tick(float DeltaTime) override;
-
 	void CheckPatrolTarget();
-
 	void CheckCombatTarget();
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
-
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
 	virtual void Destroyed() override;
 
 protected:
 	
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose = EDeathPose::EDP_Alive;
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
+	UPROPERTY(BlueprintReadOnly)
+	EDeathPose DeathPose;
 
 	virtual void BeginPlay() override;
 
-	bool InTargetRange(AActor* Target, double Radius);
-
-	void MoveToTarget(AActor* Target);
-
-	AActor* ChoosePatrolTarget();
+	bool InTargetRange(AActor* Target, double Radius) const;
 
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
 
+	virtual void HandleDamage(float DamageAmount) override;
+
+	/**
+	* Actions & Animation
+	*/
+	AActor* ChoosePatrolTarget();
+	void MoveToTarget(AActor* Target);
 	virtual void Die() override;
-
 	virtual void Attack() override;
-
 	virtual void PlayAttackMontage() override;
+	virtual bool CanAttack() const override;
 
 private:
 
@@ -93,9 +90,48 @@ private:
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
 	float WaitMax = 10.f;
 
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float PatrollingSpeed = 125.f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float ChasingSpeed = 300.f;
 
 	FTimerHandle PatrolTimer;
 
+
+	/**
+	* Callback methods
+	*/
 	void PatrolTimerFinished();
+
+	/**
+	* AI Behavior
+	*/
+	void HideHealthBar();
+	void ShowHealthBar();
+	void LoseInterest();
+	void StartPatrolling();
+	void StartChasing();
+	bool IsOutsideCombatRadius() const;
+	bool IsOutsideAttackRadius() const;
+	bool IsInsideAttackRadius() const;
+	bool IsChasing() const;
+	bool IsAttacking() const;
+	bool IsEngaged() const;
+	bool IsDead() const;
+	void ClearPatrolTimer();
+
+	/**
+	* Combat
+	*/
+	FTimerHandle AttackTimer;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackMin = 0.5f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackMax = 1.f;
+
+	void StartAttackTimer();
+	void ClearAttackTimer();
 };
