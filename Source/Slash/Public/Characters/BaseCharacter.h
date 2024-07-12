@@ -33,11 +33,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	TArray<FName> AttackMontageSections;
+
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* HitReactMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* DeathMontage;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	TArray<FName> DeathMontageSections;
 
 	virtual void BeginPlay() override;
 
@@ -48,11 +54,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
 
-	virtual void PlayAttackMontage();
-
 	void DirectionalHitReact(const FVector& ImpactPoint);
-
-	void PlayHitReactMontage(const FName& SectionName);
 
 	virtual void Die();
 
@@ -63,6 +65,18 @@ protected:
 	void SpawnHitParticles(const FVector& ImpactPoint);
 
 	virtual void HandleDamage(float DamageAmount);
+
+	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
+
+	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);
+
+	virtual int32 PlayAttackMontage();
+
+	void PlayHitReactMontage(const FName& SectionName);
+
+	virtual int32 PlayDeathMontage();
+
+	void DisableCapsule();
 
 private:
 
