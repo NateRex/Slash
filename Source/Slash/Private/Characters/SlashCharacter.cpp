@@ -14,7 +14,7 @@
 
 ASlashCharacter::ASlashCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
@@ -41,142 +41,10 @@ ASlashCharacter::ASlashCharacter()
 	Eyebrows->AttachmentName = FString("head");
 }
 
-void ASlashCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	
-	Tags.Add(FName("SlashCharacter"));
-}
-
-void ASlashCharacter::Jump()
-{
-	Super::Jump();
-}
-
-void ASlashCharacter::Equip()
-{
-	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
-	if (OverlappingWeapon)
-	{
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
-		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
-		EquippedWeapon = OverlappingWeapon;
-		OverlappingItem = nullptr;
-	}
-	else if (CanDisarm())
-	{
-		PlayEquipMontage(FName("Unequip"));
-		CharacterState = ECharacterState::ECS_Unequipped;
-		ActionState = EActionState::EAS_EquippingWeapon;
-	}
-	else if (CanArm())
-	{
-		PlayEquipMontage(FName("Equip"));
-		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
-		ActionState = EActionState::EAS_EquippingWeapon;
-	}
-}
-
-bool ASlashCharacter::CanDisarm() const
-{
-	return ActionState == EActionState::EAS_Unoccupied &&
-		CharacterState != ECharacterState::ECS_Unequipped &&
-		EquippedWeapon;
-}
-
-bool ASlashCharacter::CanArm() const
-{
-	return ActionState == EActionState::EAS_Unoccupied &&
-		CharacterState == ECharacterState::ECS_Unequipped &&
-		EquippedWeapon;
-}
-
-void ASlashCharacter::Arm()
-{
-	if (EquippedWeapon)
-	{
-		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
-	}
-}
-
-void ASlashCharacter::Disarm()
-{
-	if (EquippedWeapon)
-	{
-		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
-	}
-}
-
-void ASlashCharacter::FinishEquipping()
-{
-	ActionState = EActionState::EAS_Unoccupied;
-}
-
-void ASlashCharacter::Attack()
-{
-	Super::Attack();
-	if (CanAttack())
-	{
-		PlayAttackMontage();
-		ActionState = EActionState::EAS_Attacking;
-	}
-}
-
-bool ASlashCharacter::CanAttack() const
-{
-	return ActionState == EActionState::EAS_Unoccupied &&
-		CharacterState != ECharacterState::ECS_Unequipped;
-}
-
-void ASlashCharacter::PlayEquipMontage(const FName& SectionName)
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && EquipMontage)
-	{
-		AnimInstance->Montage_Play(EquipMontage);
-		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
-	}
-}
-
-void ASlashCharacter::AttackEnd()
-{
-	ActionState = EActionState::EAS_Unoccupied;
-}
-
-void ASlashCharacter::Look(const FInputActionValue& Value)
-{
-	const FVector2d LookInput = Value.Get<FVector2d>();
-	AddControllerYawInput(LookInput.X);
-	AddControllerPitchInput(LookInput.Y);
-}
-
-void ASlashCharacter::Move(const FInputActionValue& Value)
-{
-	if (ActionState != EActionState::EAS_Unoccupied) return;
-	
-	const FVector2d MovementInput = Value.Get<FVector2d>();
-
-	const FRotator Rotation = GetControlRotation();
-	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
-	const FRotationMatrix Matrix(YawRotation);
-
-	const FVector Forward = Matrix.GetUnitAxis(EAxis::X);
-	AddMovementInput(Forward, MovementInput.Y);
-
-	const FVector Right = Matrix.GetUnitAxis(EAxis::Y);
-	AddMovementInput(Right, MovementInput.X);
-}
-
-void ASlashCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
+
 	// Set up input mapping context
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
@@ -207,3 +75,143 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
+void ASlashCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	Tags.Add(FName("SlashCharacter"));
+}
+
+void ASlashCharacter::Jump()
+{
+	Super::Jump();
+}
+
+void ASlashCharacter::Equip()
+{
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if (OverlappingWeapon)
+	{
+		EquipWeapon(OverlappingWeapon);
+	}
+	else if (CanDisarm())
+	{
+		Disarm();
+	}
+	else if (CanArm())
+	{
+		Arm();
+	}
+}
+
+void ASlashCharacter::EquipWeapon(AWeapon* Weapon)
+{
+	Weapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+	CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	EquippedWeapon = Weapon;
+	OverlappingItem = nullptr;
+}
+
+void ASlashCharacter::Look(const FInputActionValue& Value)
+{
+	const FVector2d LookInput = Value.Get<FVector2d>();
+	AddControllerYawInput(LookInput.X);
+	AddControllerPitchInput(LookInput.Y);
+}
+
+void ASlashCharacter::Move(const FInputActionValue& Value)
+{
+	if (ActionState != EActionState::EAS_Unoccupied) return;
+
+	const FVector2d MovementInput = Value.Get<FVector2d>();
+
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+	const FRotationMatrix Matrix(YawRotation);
+
+	const FVector Forward = Matrix.GetUnitAxis(EAxis::X);
+	AddMovementInput(Forward, MovementInput.Y);
+
+	const FVector Right = Matrix.GetUnitAxis(EAxis::Y);
+	AddMovementInput(Right, MovementInput.X);
+}
+
+bool ASlashCharacter::CanAttack() const
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+void ASlashCharacter::Attack()
+{
+	Super::Attack();
+	if (CanAttack())
+	{
+		PlayAttackMontage();
+		ActionState = EActionState::EAS_Attacking;
+	}
+}
+
+void ASlashCharacter::AttackEnd()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool ASlashCharacter::CanDisarm() const
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState != ECharacterState::ECS_Unequipped &&
+		EquippedWeapon;
+}
+
+bool ASlashCharacter::CanArm() const
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState == ECharacterState::ECS_Unequipped &&
+		EquippedWeapon;
+}
+
+void ASlashCharacter::Disarm()
+{
+	PlayEquipMontage(FName("Unequip"));
+	CharacterState = ECharacterState::ECS_Unequipped;
+	ActionState = EActionState::EAS_EquippingWeapon;
+}
+
+void ASlashCharacter::Arm()
+{
+	PlayEquipMontage(FName("Equip"));
+	CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	ActionState = EActionState::EAS_EquippingWeapon;
+}
+
+void ASlashCharacter::AttachWeaponToHand()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	}
+}
+
+void ASlashCharacter::AttachWeaponToBack()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
+	}
+}
+
+void ASlashCharacter::PlayEquipMontage(const FName& SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
+	}
+}
+
+void ASlashCharacter::FinishEquipping()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}

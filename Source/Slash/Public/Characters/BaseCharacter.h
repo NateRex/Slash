@@ -1,3 +1,5 @@
+// Copyright (c) 2024 Nathaniel Rex. No Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -17,18 +19,52 @@ class SLASH_API ABaseCharacter : public ACharacter, public IHitInterface
 public:
 	ABaseCharacter();
 
+	/** AActor overrides */
 	virtual void Tick(float DeltaTime) override;
+
+protected:
+
+	/** AActor overrides */
+	virtual void BeginPlay() override;
+
+	/** Combat */
+	virtual bool CanAttack() const;
+	virtual void Attack();
+	void DirectionalHitReact(const FVector& ImpactPoint);
+	virtual void HandleDamage(float DamageAmount);
+	bool IsAlive() const;
+	virtual void Die();
+	void PlayHitSound(const FVector& ImpactPoint);
+	void SpawnHitParticles(const FVector& ImpactPoint);
+	void DisableCapsule();
+	virtual int32 PlayAttackMontage();
+	void PlayHitReactMontage(const FName& SectionName);
+	virtual int32 PlayDeathMontage();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void AttackEnd();
 
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
-
-protected:
+	
 
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* Attributes;
 
 	UPROPERTY(VisibleInstanceOnly, Category = Weapon)
 	AWeapon* EquippedWeapon;
+
+private:
+
+	/** Combat */
+	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
+	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);
+
+	UPROPERTY(EditAnywhere, Category = Sounds)
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Visual Effects")
+	UParticleSystem* HitParticles;
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* AttackMontage;
@@ -44,45 +80,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	TArray<FName> DeathMontageSections;
-
-	virtual void BeginPlay() override;
-
-	virtual bool CanAttack() const;
-
-	virtual void Attack();
-
-	UFUNCTION(BlueprintCallable)
-	virtual void AttackEnd();
-
-	void DirectionalHitReact(const FVector& ImpactPoint);
-
-	virtual void Die();
-
-	bool IsAlive() const;
-
-	void PlayHitSound(const FVector& ImpactPoint);
-
-	void SpawnHitParticles(const FVector& ImpactPoint);
-
-	virtual void HandleDamage(float DamageAmount);
-
-	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
-
-	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);
-
-	virtual int32 PlayAttackMontage();
-
-	void PlayHitReactMontage(const FName& SectionName);
-
-	virtual int32 PlayDeathMontage();
-
-	void DisableCapsule();
-
-private:
-
-	UPROPERTY(EditAnywhere, Category = Sounds)
-	USoundBase* HitSound;
-
-	UPROPERTY(EditAnywhere, Category = "Visual Effects")
-	UParticleSystem* HitParticles;
 };

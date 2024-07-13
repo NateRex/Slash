@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Nathaniel Rex. No Rights Reserved.
+
+
 #include "BaseCharacter.h"
 #include "Items/Weapons/Weapon.h"
 #include "Components/BoxComponent.h"
@@ -8,6 +11,8 @@
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 }
