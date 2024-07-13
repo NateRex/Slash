@@ -139,13 +139,14 @@ void AEnemy::Die()
 void AEnemy::Attack()
 {
 	Super::Attack();
-	
+
+	EnemyState = EEnemyState::EES_Engaged;
 	PlayAttackMontage();
 }
 
 bool AEnemy::CanAttack() const
 {
-	return IsInsideAttackRadius() && !IsAttacking() && !IsDead();
+	return IsInsideAttackRadius() && !IsAttacking() && !IsEngaged() && !IsDead();
 }
 
 int32 AEnemy::PlayDeathMontage()
@@ -159,6 +160,13 @@ int32 AEnemy::PlayDeathMontage()
 	}
 
 	return Selection;
+}
+
+void AEnemy::AttackEnd()
+{
+	Super::AttackEnd();
+	EnemyState = EEnemyState::EES_NoState;
+	CheckCombatTarget();
 }
 
 void AEnemy::PatrolTimerFinished()
