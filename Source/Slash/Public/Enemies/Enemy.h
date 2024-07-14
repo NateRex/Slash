@@ -21,30 +21,26 @@ public:
 
 	AEnemy();
 
-	/** <AActor> */
+	// AActor overrides
 	virtual void Tick(float DeltaTime) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void Destroyed() override;
-	/** </AActor> */
 
-	/** <IHitInterface> */
+	// IHitInterface overrides
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
-	/** </IHitInterface> */
 
 protected:
 
-	/** <AActor> */
+	// AActor
 	virtual void BeginPlay() override;
-	/** </AActor> */
 
-	/** <ABaseCharacter> */
+	// ABaseCharacter
 	virtual bool CanAttack() const override;
 	virtual void Attack() override;
 	virtual void AttackEnd() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
 	virtual int32 PlayDeathMontage() override;
-	/** </ABaseCharacter> */
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
@@ -54,7 +50,7 @@ protected:
 
 private:
 
-	/** AI Behavior */
+	// AI Behavior
 	void InitializeEnemy();
 	AActor* ChoosePatrolTarget();
 	void CheckPatrolTarget();
@@ -79,8 +75,9 @@ private:
 	void HideHealthBar();
 	void SpawnDefaultWeapon();
 
+	// callback for OnPawnSeen in PawnSensingComponent
 	UFUNCTION()
-	void PawnSeen(APawn* SeenPawn); // callback for OnPawnSeen in PawnSensingComponent
+	void PawnSeen(APawn* SeenPawn);
 	
 	AAIController* EnemyController;
 

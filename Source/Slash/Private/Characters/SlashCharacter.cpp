@@ -11,6 +11,7 @@
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 #include "Animation/AnimInstance.h"
+#include "Components/StaticMeshComponent.h"
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -23,14 +24,19 @@ ASlashCharacter::ASlashCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 
+	USkeletalMeshComponent* CharacterMesh = GetMesh();
+	CharacterMesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	CharacterMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	CharacterMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+	CharacterMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+	CharacterMesh->SetGenerateOverlapEvents(true);
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("SlashCameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 300.f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("SlashCamera"));
 	Camera->SetupAttachment(CameraBoom);
-
-	USkeletalMeshComponent* CharacterMesh = GetMesh();
 
 	Hair = CreateDefaultSubobject<UGroomComponent>(TEXT("SlashHair"));
 	Hair->SetupAttachment(CharacterMesh);
@@ -75,11 +81,17 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
+void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+{
+	PlayHitSound(ImpactPoint);
+	SpawnHitParticles(ImpactPoint);
+}
+
 void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Tags.Add(FName("SlashCharacter"));
+	Tags.Add(FName("EngageableTarget"));
 }
 
 void ASlashCharacter::Jump()

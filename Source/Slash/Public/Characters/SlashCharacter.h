@@ -28,6 +28,9 @@ public:
 	// AActor overrides
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// IHitInterface overrides
+	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+
 protected:
 
 	// AActor overrides

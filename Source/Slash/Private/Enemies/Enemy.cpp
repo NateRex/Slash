@@ -151,6 +151,7 @@ void AEnemy::InitializeEnemy()
 	MoveToTarget(PatrolTarget);
 	HideHealthBar();
 	SpawnDefaultWeapon();
+	Tags.Add(FName("Enemy"));
 }
 
 void AEnemy::CheckPatrolTarget()
@@ -330,7 +331,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	const bool bShouldChaseTarget =
 		EnemyState != EEnemyState::EES_Dead &&
 		EnemyState < EEnemyState::EES_Chasing &&
-		SeenPawn->ActorHasTag(FName("SlashCharacter"));
+		SeenPawn->ActorHasTag(FName("EngageableTarget"));
 
 	if (bShouldChaseTarget)
 	{
