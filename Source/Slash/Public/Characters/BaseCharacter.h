@@ -27,6 +27,9 @@ protected:
 	/** AActor overrides */
 	virtual void BeginPlay() override;
 
+	/** IHitInterface overrides */
+	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+
 	/** Combat */
 	virtual bool CanAttack() const;
 	virtual void Attack();
