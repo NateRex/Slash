@@ -27,7 +27,7 @@ public:
 	virtual void Destroyed() override;
 
 	// IHitInterface overrides
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, const AActor* Hitter) override;
 
 protected:
 

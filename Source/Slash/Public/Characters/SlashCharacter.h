@@ -29,14 +29,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// IHitInterface overrides
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, const AActor* Hitter) override;
 
 protected:
 
 	// AActor overrides
 	virtual void BeginPlay() override;
 
-	// Input callbacks
 	virtual void Jump() override;
 	void Equip();
 	virtual void Attack() override;
