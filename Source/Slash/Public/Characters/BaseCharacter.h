@@ -40,9 +40,12 @@ protected:
 	void PlayHitSound(const FVector& ImpactPoint);
 	void SpawnHitParticles(const FVector& ImpactPoint);
 	void DisableCapsule();
+
+	/** Montage */
 	virtual int32 PlayAttackMontage();
 	void PlayHitReactMontage(const FName& SectionName);
 	virtual int32 PlayDeathMontage();
+	void StopAttackMontage();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();

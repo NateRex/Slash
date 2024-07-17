@@ -48,6 +48,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	TEnumAsByte<EDeathPose> DeathPose;
 
+	UPROPERTY(BlueprintReadOnly, Category = Combat)
+	APawn* CombatTarget;
+
 private:
 
 	// AI Behavior
@@ -112,8 +115,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	double CombatRange = 1000.f;
-
-	APawn* CombatTarget = nullptr;
 
 	FTimerHandle AttackTimer;
 

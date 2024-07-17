@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Nathaniel Rex. No Rights Reserved.
 
 
-#include "BaseCharacter.h"
+#include "Characters/BaseCharacter.h"
 #include "Items/Weapons/Weapon.h"
 #include "Components/BoxComponent.h"
 #include "Components/AttributeComponent.h"
@@ -87,6 +87,15 @@ void ABaseCharacter::PlayHitReactMontage(const FName& SectionName)
 int32 ABaseCharacter::PlayDeathMontage()
 {
 	return PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+}
+
+void ABaseCharacter::StopAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Stop(0.25f, AttackMontage);
+	}
 }
 
 void ABaseCharacter::DisableCapsule()
