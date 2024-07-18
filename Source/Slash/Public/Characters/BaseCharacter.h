@@ -48,6 +48,12 @@ protected:
 	void StopAttackMontage();
 
 	UFUNCTION(BlueprintCallable)
+	FVector GetTranslationWarpTarget();
+	
+	UFUNCTION(BlueprintCallable)
+	FVector GetRotationWarpTarget();
+
+	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
 
 	UFUNCTION(BlueprintCallable)
@@ -59,6 +65,12 @@ protected:
 
 	UPROPERTY(VisibleInstanceOnly, Category = Weapon)
 	AWeapon* EquippedWeapon;
+
+	UPROPERTY(BlueprintReadOnly, Category = Combat)
+	APawn* CombatTarget;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	double WarpTargetDistance = 75.0;
 
 private:
 

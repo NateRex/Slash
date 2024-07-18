@@ -48,9 +48,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	TEnumAsByte<EDeathPose> DeathPose;
 
-	UPROPERTY(BlueprintReadOnly, Category = Combat)
-	APawn* CombatTarget;
-
 private:
 
 	// AI Behavior
