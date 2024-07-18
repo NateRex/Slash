@@ -31,10 +31,10 @@ public:
 
 protected:
 
-	// AActor
+	// AActor overrides
 	virtual void BeginPlay() override;
 
-	// ABaseCharacter
+	// ABaseCharacter overrides
 	virtual bool CanAttack() const override;
 	virtual void Attack() override;
 	virtual void AttackEnd() override;
