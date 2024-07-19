@@ -15,6 +15,7 @@ class UInputMappingContext;
 class UInputAction;
 class AItem;
 class UAnimMontage;
+class USlashOverlay;
 
 UCLASS()
 class SLASH_API ASlashCharacter : public ABaseCharacter
@@ -85,7 +86,8 @@ protected:
 
 private:
 
-	// Components
+	void InitializeOverlay();
+
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
 
@@ -98,19 +100,19 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Hair)
 	UGroomComponent* Eyebrows;
 
-	// Character states
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
-	// Item available for pickup
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
-	// Animation montages
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY()
+	USlashOverlay* SlashOverlay;
 
 public:
 
