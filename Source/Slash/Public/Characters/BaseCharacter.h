@@ -70,7 +70,7 @@ protected:
 	APawn* CombatTarget;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
-	double WarpTargetDistance = 75.0;
+	double WarpTargetDistance = 90.f;
 
 private:
 

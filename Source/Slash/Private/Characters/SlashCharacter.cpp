@@ -87,6 +87,9 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	HandleDamage(DamageAmount);
+
+	SetHUDHealth();
+
 	return DamageAmount;
 }
 
@@ -108,7 +111,10 @@ void ASlashCharacter::BeginPlay()
 
 void ASlashCharacter::Jump()
 {
-	Super::Jump();
+	if (IsUnoccupied())
+	{
+		Super::Jump();
+	}
 }
 
 void ASlashCharacter::Equip()
@@ -245,6 +251,11 @@ void ASlashCharacter::HitReactEnd()
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
+bool ASlashCharacter::IsUnoccupied()
+{
+	return ActionState == EActionState::EAS_Unoccupied;
+}
+
 void ASlashCharacter::InitializeOverlay()
 {
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
@@ -260,5 +271,13 @@ void ASlashCharacter::InitializeOverlay()
 				SlashOverlay->SetSoulText(0);
 			}
 		}
+	}
+}
+
+void ASlashCharacter::SetHUDHealth()
+{
+	if (SlashOverlay && Attributes)
+	{
+		SlashOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 	}
 }

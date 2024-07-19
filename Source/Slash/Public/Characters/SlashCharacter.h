@@ -86,7 +86,9 @@ protected:
 
 private:
 
+	bool IsUnoccupied();
 	void InitializeOverlay();
+	void SetHUDHealth();
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
