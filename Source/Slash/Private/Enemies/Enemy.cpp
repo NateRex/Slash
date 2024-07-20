@@ -113,6 +113,7 @@ void AEnemy::Die()
 void AEnemy::Attack()
 {
 	Super::Attack();
+	if (CombatTarget == nullptr) return;
 
 	EnemyState = EEnemyState::EES_Engaged;
 	PlayAttackMontage();
@@ -325,7 +326,8 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	const bool bShouldChaseTarget =
 		EnemyState != EEnemyState::EES_Dead &&
 		EnemyState < EEnemyState::EES_Chasing &&
-		SeenPawn->ActorHasTag(FName("EngageableTarget"));
+		SeenPawn->ActorHasTag(FName("EngageableTarget")) &&
+		!SeenPawn->ActorHasTag(FName("Dead"));
 
 	if (bShouldChaseTarget)
 	{
