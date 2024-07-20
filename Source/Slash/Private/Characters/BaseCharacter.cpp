@@ -7,6 +7,7 @@
 #include "Components/AttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Characters/CharacterTypes.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -86,7 +87,15 @@ void ABaseCharacter::PlayHitReactMontage(const FName& SectionName)
 
 int32 ABaseCharacter::PlayDeathMontage()
 {
-	return PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+	const int32 Selection = PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+
+	TEnumAsByte<EDeathPose> Pose(Selection);
+	if (Pose < EDeathPose::EDP_MAX)
+	{
+		DeathPose = Pose;
+	}
+
+	return Selection;
 }
 
 void ABaseCharacter::StopAttackMontage()
@@ -121,6 +130,11 @@ void ABaseCharacter::DisableCapsule()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ABaseCharacter::DisableMeshCollision()
+{
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
 bool ABaseCharacter::CanAttack() const
 {
 	return false;
@@ -128,6 +142,7 @@ bool ABaseCharacter::CanAttack() const
 
 void ABaseCharacter::Die()
 {
+	PlayDeathMontage();
 }
 
 bool ABaseCharacter::IsAlive() const

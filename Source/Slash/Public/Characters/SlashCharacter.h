@@ -38,6 +38,9 @@ protected:
 	// AActor overrides
 	virtual void BeginPlay() override;
 
+	// BaseCharacter overrides
+	virtual void Die() override;
+
 	virtual void Jump() override;
 	void Equip();
 	virtual void Attack() override;
@@ -121,4 +124,5 @@ public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE AItem* GetOverlappingItem() const { return OverlappingItem; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
+	FORCEINLINE EActionState GetActionState() const { return ActionState; }
 };
