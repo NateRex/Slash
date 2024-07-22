@@ -18,8 +18,8 @@ AItem::AItem()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("ItemSphere"));
 	Sphere->SetupAttachment(ItemMesh);
 
-	EmbersEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ItemEmbers"));
-	EmbersEffect->SetupAttachment(ItemMesh);
+	ItemEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ItemEmbers"));
+	ItemEffect->SetupAttachment(ItemMesh);
 }
 
 void AItem::BeginPlay()

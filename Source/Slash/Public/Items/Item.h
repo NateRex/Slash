@@ -35,7 +35,7 @@ protected:
 	USphereComponent* Sphere;
 
 	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* EmbersEffect;
+	UNiagaraComponent* ItemEffect;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float Amplitude = 0.25f;
