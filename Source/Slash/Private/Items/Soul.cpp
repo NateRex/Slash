@@ -12,5 +12,8 @@ void ASoul::OnSphereStartOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		PickupInterface->AddSouls(this);
 	}
 
+	SpawnPickupSystem();
+	SpawnPickupSound();
+
 	Destroy();
 }
