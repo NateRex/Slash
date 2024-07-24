@@ -25,4 +25,5 @@ private:
 public:
 
 	FORCEINLINE int32 GetValue() const { return SoulValue; }
+	FORCEINLINE void SetValue(int32 Amt) { SoulValue = Amt; }
 };
