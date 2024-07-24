@@ -19,4 +19,10 @@ protected:
 
 private:
 
+	UPROPERTY(EditAnywhere, Category = "Soul Properties")
+	int32 SoulValue;
+
+public:
+
+	FORCEINLINE int32 GetValue() const { return SoulValue; }
 };

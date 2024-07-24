@@ -8,6 +8,7 @@
 
 class AItem;
 class ASoul;
+class ATreasure;
 
 UINTERFACE(MinimalAPI)
 class UPickupInterface : public UInterface
@@ -23,4 +24,5 @@ public:
 
 	virtual void SetOverlappingItem(AItem* Item) = 0;
 	virtual void AddSouls(ASoul* Soul) = 0;
+	virtual void AddGold(ATreasure* Treasure) = 0;
 };
