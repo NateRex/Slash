@@ -20,7 +20,7 @@
 
 ASlashCharacter::ASlashCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
@@ -50,6 +50,15 @@ ASlashCharacter::ASlashCharacter()
 	Eyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("SlashEyebrows"));
 	Eyebrows->SetupAttachment(CharacterMesh);
 	Eyebrows->AttachmentName = FString("head");
+}
+
+void ASlashCharacter::Tick(float DeltaTime)
+{
+	if (Attributes && SlashOverlay)
+	{
+		Attributes->RegenStamina(DeltaTime);
+		SlashOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+	}
 }
 
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -223,7 +232,13 @@ void ASlashCharacter::Attack()
 
 void ASlashCharacter::Dodge()
 {
-	if (ActionState != EActionState::EAS_Unoccupied) return;
+	if (!IsUnoccupied() || !HasEnoughStamina()) return;
+
+	if (Attributes && SlashOverlay)
+	{
+		Attributes->UseStamina(Attributes->GetDodgeCost());
+		SlashOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+	}
 
 	PlayDodgeMontage();
 	ActionState = EActionState::EAS_Dodging;
@@ -308,6 +323,11 @@ void ASlashCharacter::HitReactEnd()
 bool ASlashCharacter::IsUnoccupied()
 {
 	return ActionState == EActionState::EAS_Unoccupied;
+}
+
+bool ASlashCharacter::HasEnoughStamina()
+{
+	return Attributes && Attributes->GetStamina() >= Attributes->GetDodgeCost();
 }
 
 void ASlashCharacter::InitializeOverlay()

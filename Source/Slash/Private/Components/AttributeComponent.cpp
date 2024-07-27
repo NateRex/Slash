@@ -5,7 +5,7 @@
 
 UAttributeComponent::UAttributeComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UAttributeComponent::BeginPlay()
@@ -24,9 +24,19 @@ void UAttributeComponent::ReceiveDamage(float Damage)
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
 }
 
+void UAttributeComponent::UseStamina(float Cost)
+{
+	Stamina = FMath::Clamp(Stamina - Cost, 0.f, MaxStamina);
+}
+
 float UAttributeComponent::GetHealthPercent() const
 {
 	return Health / MaxHealth;
+}
+
+float UAttributeComponent::GetStaminaPercent() const
+{
+	return Stamina / MaxStamina;
 }
 
 bool UAttributeComponent::IsAlive() const
@@ -42,4 +52,9 @@ void UAttributeComponent::AddGold(int32 Amt)
 void UAttributeComponent::AddSouls(int32 Amt)
 {
 	Souls += Amt;
+}
+
+void UAttributeComponent::RegenStamina(float DeltaTime)
+{
+	Stamina = FMath::Clamp(Stamina + StaminaRegenRate * DeltaTime, 0.f, MaxStamina);
 }
