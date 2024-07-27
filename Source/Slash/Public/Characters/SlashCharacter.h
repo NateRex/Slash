@@ -48,15 +48,18 @@ protected:
 	// BaseCharacter overrides
 	virtual void Die() override;
 
+	// Input callbacks
 	virtual void Jump() override;
 	void Equip();
 	virtual void Attack() override;
+	void Dodge();
 	void Look(const FInputActionValue& Value);
 	void Move(const FInputActionValue& Value);
 
 	// Combat
 	void EquipWeapon(AWeapon* Weapon);
 	virtual void AttackEnd() override;
+	virtual void DodgeEnd() override;
 	virtual bool CanAttack() const override;
 	bool CanDisarm() const;
 	bool CanArm() const;
@@ -84,6 +87,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* AttackAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* DodgeAction;
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* EquipAction;

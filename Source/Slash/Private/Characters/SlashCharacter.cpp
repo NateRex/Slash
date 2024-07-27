@@ -78,6 +78,9 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		// Attacking
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 
+		// Dodging
+		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Dodge);
+
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
 
@@ -127,7 +130,6 @@ void ASlashCharacter::AddGold(ATreasure* Treasure)
 		Attributes->AddGold(Treasure->GetValue());
 		SlashOverlay->SetCoinText(Attributes->GetGold());
 	}
-
 }
 
 void ASlashCharacter::BeginPlay()
@@ -219,8 +221,23 @@ void ASlashCharacter::Attack()
 	}
 }
 
+void ASlashCharacter::Dodge()
+{
+	if (ActionState != EActionState::EAS_Unoccupied) return;
+
+	PlayDodgeMontage();
+	ActionState = EActionState::EAS_Dodging;
+}
+
 void ASlashCharacter::AttackEnd()
 {
+	Super::AttackEnd();
+	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::DodgeEnd()
+{
+	Super::DodgeEnd();
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
