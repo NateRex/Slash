@@ -139,6 +139,11 @@ void ABaseCharacter::DisableCapsule()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ABaseCharacter::EnableMeshCollision()
+{
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
 void ABaseCharacter::DisableMeshCollision()
 {
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);

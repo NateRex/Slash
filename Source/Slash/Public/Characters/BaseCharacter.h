@@ -41,6 +41,7 @@ protected:
 	void PlayHitSound(const FVector& ImpactPoint);
 	void SpawnHitParticles(const FVector& ImpactPoint);
 	void DisableCapsule();
+	void EnableMeshCollision();
 	void DisableMeshCollision();
 
 	/** Montage */

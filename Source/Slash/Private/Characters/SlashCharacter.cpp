@@ -242,6 +242,7 @@ void ASlashCharacter::Dodge()
 
 	PlayDodgeMontage();
 	ActionState = EActionState::EAS_Dodging;
+	DisableMeshCollision();
 }
 
 void ASlashCharacter::AttackEnd()
@@ -254,6 +255,7 @@ void ASlashCharacter::DodgeEnd()
 {
 	Super::DodgeEnd();
 	ActionState = EActionState::EAS_Unoccupied;
+	EnableMeshCollision();
 }
 
 bool ASlashCharacter::CanDisarm() const
