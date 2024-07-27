@@ -111,8 +111,11 @@ private:
 
 	FTimerHandle AttackTimer;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = Combat)
 	double AttackRange = 150.f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	double MoveToTolerance = 50.f;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float AttackMin = 0.5f;

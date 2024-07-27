@@ -56,15 +56,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	HandleDamage(DamageAmount);
 
 	CombatTarget = EventInstigator->GetPawn();
-	
-	if (IsInsideAttackRadius())
-	{
-		EnemyState = EEnemyState::EES_Attacking;
-	}
-	else if (IsOutsideAttackRadius())
-	{
-		StartChasing();
-	}
+	StartChasing();
 
 	return DamageAmount;
 }
@@ -302,7 +294,7 @@ void AEnemy::MoveToTarget(AActor* Target)
 
 	FAIMoveRequest MoveRequest;
 	MoveRequest.SetGoalActor(Target);
-	MoveRequest.SetAcceptanceRadius(50.f);
+	MoveRequest.SetAcceptanceRadius(MoveToTolerance);
 	EnemyController->MoveTo(MoveRequest);
 }
 
@@ -332,7 +324,7 @@ void AEnemy::SpawnDefaultWeapon()
 	if (World && WeaponClass)
 	{
 		AWeapon* DefaultWeapon = World->SpawnActor<AWeapon>(WeaponClass);
-		DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+		DefaultWeapon->Equip(GetMesh(), FName("WeaponSocket"), this, this);
 		EquippedWeapon = DefaultWeapon;
 	}
 }
