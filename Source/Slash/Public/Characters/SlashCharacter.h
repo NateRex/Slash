@@ -47,7 +47,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	// BaseCharacter overrides
-	virtual void Die() override;
+	virtual void Die_Implementation() override;
 
 	// Input callbacks
 	virtual void Jump() override;
