@@ -114,6 +114,7 @@ void AWeapon::BoxTrace(FHitResult& BoxHit)
 	const FVector Start = BoxTraceStart->GetComponentLocation();
 	const FVector End = BoxTraceEnd->GetComponentLocation();
 
+	IgnoreActors.AddUnique(this);
 	IgnoreActors.AddUnique(GetOwner());
 
 	UKismetSystemLibrary::BoxTraceSingle(
